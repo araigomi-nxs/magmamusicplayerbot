@@ -1,0 +1,21 @@
+{
+  "name": "magma-music-player-bot",
+  "version": "0.1.0",
+  "description": "Automate Magma canvas join + call join + music streaming",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js run",
+    "run": "node src/index.js run",
+    "check": "node src/index.js check",
+    "play": "node src/index.js play"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.52.0"
+  }
+}
