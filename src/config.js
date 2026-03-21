@@ -36,6 +36,8 @@ export function getConfig() {
       baseUrl: process.env.MAGMA_BASE_URL || "https://magma.com",
       loginPath: process.env.LOGIN_PATH || "/login",
       headless: parseBoolean(process.env.HEADLESS, false),
+      browserChannel: process.env.BROWSER_CHANNEL || "chrome",
+      browserExecutablePath: process.env.BROWSER_EXECUTABLE_PATH || "",
       retryDelayMs: parseNumber(process.env.RETRY_DELAY_MS, 10000),
       heartbeatMs: parseNumber(process.env.HEARTBEAT_MS, 15000),
       chatCommandsEnabled: parseBoolean(process.env.MAGMA_CHAT_COMMANDS_ENABLED, true),

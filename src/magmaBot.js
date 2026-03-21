@@ -84,11 +84,8 @@ export class MagmaBot {
       await this.prepareFakeMicAudio();
     }
 
-    this.logger.info("Launching Chromium...");
-    this.browser = await chromium.launch({
-      headless: this.config.headless,
-      args: this.buildChromiumArgs()
-    });
+    this.logger.info(`Launching browser (preferred channel: ${this.config.browserChannel || "chrome"})...`);
+    this.browser = await this.launchBrowser();
 
     this.context = await this.browser.newContext({
       permissions: ["microphone", "camera", "notifications"]
@@ -115,6 +112,37 @@ export class MagmaBot {
     this.commandsArmed = true;
     this.commandsArmedAt = Date.now();
     this.logger.info("Command listener armed after join + input-device setup.");
+  }
+
+  async launchBrowser() {
+    const args = this.buildChromiumArgs();
+    const preferredChannel = String(this.config.browserChannel || "chrome").trim();
+    const executablePath = String(this.config.browserExecutablePath || "").trim();
+
+    const launchOptions = {
+      headless: this.config.headless,
+      args
+    };
+
+    if (executablePath) {
+      this.logger.info(`Launching browser via executable path: ${executablePath}`);
+      return chromium.launch({
+        ...launchOptions,
+        executablePath
+      });
+    }
+
+    try {
+      return await chromium.launch({
+        ...launchOptions,
+        channel: preferredChannel
+      });
+    } catch (error) {
+      this.logger.warn(
+        `Preferred channel '${preferredChannel}' unavailable; falling back to Playwright bundled Chromium. ${error?.message || ""}`
+      );
+      return chromium.launch(launchOptions);
+    }
   }
 
   async waitForJoinAndVoiceSetup() {
